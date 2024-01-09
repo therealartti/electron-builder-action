@@ -8,7 +8,7 @@ GitHub Actions allows you to build your app on macOS, Windows and Linux without 
 
 ## Setup
 
-1. **Install and configure `electron-builder`** (v22+) in your Electron app. You can read about this in [the project's docs](https://www.electron.build) or in [my blog post](https://samuelmeuli.com/blog/2019-04-07-packaging-and-publishing-an-electron-app).
+1. **Install and configure `electron-builder`** (v22+) in your Electron app. You can read about this in [the project's docs](https://www.electron.build) or in [Samuel Meuli's blog post](https://samuelmeuli.com/blog/2019-04-07-packaging-and-publishing-an-electron-app).
 
 2. If you need to compile code (e.g. TypeScript to JavaScript or Sass to CSS), make sure this is done using a **`build` script in your `package.json` file**. The action will execute that script before packaging your app. However, **make sure that the `build` script does _not_ run `electron-builder`**, as this action will do that for you.
 
@@ -29,15 +29,15 @@ GitHub Actions allows you to build your app on macOS, Windows and Linux without 
 
        steps:
          - name: Check out Git repository
-           uses: actions/checkout@v1
+           uses: actions/checkout@v4
 
          - name: Install Node.js, NPM and Yarn
-           uses: actions/setup-node@v1
+           uses: actions/setup-node@v4
            with:
-             node-version: 10
+             node-version: 20
 
          - name: Build/release Electron app
-           uses: samuelmeuli/action-electron-builder@v1
+           uses: therealartti/electron-builder-action@v1
            with:
              # GitHub token, automatically provided to the action
              # (No need to define this secret in the repo settings)
@@ -90,11 +90,11 @@ If you are building for **macOS**, you'll want your code to be [signed](https://
   - `mac_certs`: Your encoded certificates, i.e. the content of the `encoded.txt` file you created before
   - `mac_certs_password`: The password you set when exporting the certificates
 
-Add the following options to your workflow's existing `action-electron-builder` step:
+Add the following options to your workflow's existing `electron-builder-action` step:
 
 ```yml
 - name: Build/release Electron app
-  uses: samuelmeuli/action-electron-builder@v1
+  uses: therealartti/electron-builder-action@v1
   with:
     # ...
     mac_certs: ${{ secrets.mac_certs }}
@@ -102,22 +102,6 @@ Add the following options to your workflow's existing `action-electron-builder` 
 ```
 
 The same goes for **Windows** code signing (`windows_certs` and `windows_certs_password` secrets).
-
-### Snapcraft
-
-If you are building/releasing your Linux app for Snapcraft (which is `electron-builder`'s default), you will additionally need to install and sign in to Snapcraft. This can be done using an `action-snapcraft` step before the `action-electron-builder` step:
-
-```yml
-- name: Install Snapcraft
-  uses: samuelmeuli/action-snapcraft@v1
-  # Only install Snapcraft on Ubuntu
-  if: startsWith(matrix.os, 'ubuntu')
-  with:
-    # Log in to Snap Store
-    snapcraft_token: ${{ secrets.snapcraft_token }}
-```
-
-You can read [here](https://github.com/samuelmeuli/action-snapcraft) how you can obtain a `snapcraft_token`.
 
 ### Notarization
 
@@ -140,11 +124,11 @@ If you've configured `electron-builder` to notarize your Electron Mac app [as de
         echo '${{ secrets.api_key }}' > ~/private_keys/AuthKey_${{ secrets.api_key_id }}.p8
     ```
 
-3.  Pass the following environment variables to `action-electron-builder`:
+3.  Pass the following environment variables to `electron-builder-action`:
 
     ```yml
     - name: Build/release Electron app
-      uses: samuelmeuli/action-electron-builder@v1
+      uses: therealartti/electron-builder-action@v1
       with:
         # ...
       env:
@@ -153,16 +137,10 @@ If you've configured `electron-builder` to notarize your Electron Mac app [as de
         API_KEY_ISSUER_ID: ${{ secrets.api_key_issuer_id }}
     ```
 
-## Example
-
-For an example of the action used in production (including app notarization and publishing to Snapcraft), see [Mini Diary](https://github.com/samuelmeuli/mini-diary).
-
 ## Development
 
 Suggestions and contributions are always welcome! Please discuss larger changes via issue before submitting a pull request.
 
-## Related
+## Credit
 
-- [Snapcraft Action](https://github.com/samuelmeuli/action-snapcraft) – GitHub Action for setting up Snapcraft
-- [Lint Action](https://github.com/samuelmeuli/lint-action) – GitHub Action for detecting and fixing linting errors
-- [Maven Publish Action](https://github.com/samuelmeuli/action-maven-publish) – GitHub Action for automatically publishing Maven packages
+Credit to Samuel Meuli for building [this awesome project](https://github.com/samuelmeuli/action-electron-builder)
