@@ -37,7 +37,7 @@ GitHub Actions allows you to build your app on macOS, Windows and Linux without 
              node-version: 20
 
          - name: Build/release Electron app
-           uses: therealartti/electron-builder-action@v1
+           uses: therealartti/electron-builder-action@master
            with:
              # GitHub token, automatically provided to the action
              # (No need to define this secret in the repo settings)
@@ -94,7 +94,7 @@ Add the following options to your workflow's existing `electron-builder-action` 
 
 ```yml
 - name: Build/release Electron app
-  uses: therealartti/electron-builder-action@v1
+  uses: therealartti/electron-builder-action@master
   with:
     # ...
     mac_certs: ${{ secrets.mac_certs }}
@@ -128,7 +128,7 @@ If you've configured `electron-builder` to notarize your Electron Mac app [as de
 
     ```yml
     - name: Build/release Electron app
-      uses: therealartti/electron-builder-action@v1
+      uses: therealartti/electron-builder-action@master
       with:
         # ...
       env:
